@@ -1,23 +1,28 @@
 #include <stdio.h>
 #include <ctype.h>
+#include <stdbool.h>
+#include <string.h>
 
 int n, opptr=0;
 char productions[20][20];
 char op[10];
 
 void first(char);
+void duprev();
 
 int main()
 {
-    printf("How many productions are there? ");
-    scanf("%i", &n);
-    getchar();
-    printf("\n");
-    for(int i=0; i<n; i++)
+    FILE *fptr;
+    fptr = fopen("C:\\Users\\file1.txt", "r"); // file path
+    int i=0;
+    while(!feof((FILE*)fptr))
     {
-        printf("Enter production no. %d : ", i+1);
-        fgets(productions[i], 20, stdin);
+        printf("Production no. %d : ", i+1);
+        fgets(productions[i], 20, (FILE*)fptr);
+        printf("%s", productions[i]);
+        i++;
     }
+    n=i;
     char t, recur;
     do
     {
@@ -25,8 +30,9 @@ int main()
         scanf("%c", &t);
 
         first(t);
+        duprev();
         printf("\nFIRST of %c : { ", t);
-        for(int i=0; i<opptr; i++)
+        for(int i=0; i<strlen(op); i++)
         {
             printf("%c, ",op[i]);
         }
@@ -39,6 +45,7 @@ int main()
         scanf("%c", &recur);
         getchar();
     }while(recur=='c' || recur=='C');
+    fclose(fptr);
     return 0;
 }
 
@@ -69,3 +76,21 @@ void first(char t)
         }
     }
 }
+
+void duprev()
+{
+    for(int i = 0; i < strlen(op); i++)
+  	{
+  		for(int j = i + 1; op[j] != '\0'; j++)
+  		{
+  			if(op[j] == op[i])  
+			{
+  				for(int k = j; op[k] != '\0'; k++)
+				{
+					op[k] = op[k + 1];
+				}
+ 			}
+		}
+	}
+}
+
